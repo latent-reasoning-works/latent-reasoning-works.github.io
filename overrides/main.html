@@ -29,15 +29,21 @@
     .md-footer { display: none; }
     .md-tabs { display: none; }
 
+    /* Break out of Material grid */
+    .md-main { padding: 0; }
+    .md-main__inner { margin: 0; max-width: none; }
+    .md-grid { max-width: none; margin: 0; }
+
     /* ─── The void ─── */
     .lrw-splash {
-      min-height: 100vh;
+      position: fixed;
+      inset: 0;
       display: flex;
       align-items: center;
       justify-content: center;
       background: var(--lrw-void);
-      position: relative;
       overflow: hidden;
+      z-index: 5;
     }
 
     /* ─── Drifting nebula orbs ─── */
