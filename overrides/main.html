@@ -6,87 +6,276 @@
 
 {% block styles %}
   {{ super() }}
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@1,300;1,400&family=Syne:wght@300;400;500&family=JetBrains+Mono:wght@300;400&display=swap" rel="stylesheet">
   <style>
-    /* Hide default MkDocs elements on landing page */
+    :root {
+      --lrw-void: #08080f;
+      --lrw-teal: #35a99f;
+      --lrw-coral: #c85a3a;
+      --lrw-gold: #dfb624;
+      --lrw-cream: #edcc97;
+    }
+
+    /* Reset MkDocs chrome */
     .md-main__inner { margin: 0; padding: 0; max-width: none; }
     .md-sidebar { display: none; }
     .md-content { max-width: none; margin: 0; padding: 0; }
-    .md-header { background: transparent; box-shadow: none; position: absolute; width: 100%; z-index: 10; }
-    .md-header[data-md-state="shadow"] { box-shadow: none; background: transparent; }
+    .md-header { background: transparent !important; box-shadow: none !important; position: absolute; width: 100%; z-index: 10; }
+    .md-header[data-md-state="shadow"] { box-shadow: none !important; background: transparent !important; }
     .md-footer { display: none; }
+    .md-tabs { display: none; }
 
-    /* Splash hero */
+    /* ─── The void ─── */
     .lrw-splash {
       min-height: 100vh;
       display: flex;
-      flex-direction: column;
       align-items: center;
       justify-content: center;
-      text-align: center;
-      background: linear-gradient(135deg in oklch, #35a99f, #c85a3a, #dfb624, #edcc97);
+      background: var(--lrw-void);
       position: relative;
       overflow: hidden;
     }
 
-    /* Dark overlay for text readability */
-    .lrw-splash::before {
-      content: "";
+    /* ─── Drifting nebula orbs ─── */
+    .lrw-orb {
       position: absolute;
-      inset: 0;
-      background: rgba(0, 0, 0, 0.45);
-      z-index: 1;
+      border-radius: 50%;
+      filter: blur(120px);
+      opacity: 0.35;
+      will-change: transform;
     }
 
+    .lrw-orb--teal {
+      width: 600px;
+      height: 600px;
+      background: radial-gradient(circle, var(--lrw-teal), transparent 70%);
+      top: -15%;
+      left: -10%;
+      animation: drift-1 25s ease-in-out infinite alternate;
+    }
+
+    .lrw-orb--coral {
+      width: 500px;
+      height: 500px;
+      background: radial-gradient(circle, var(--lrw-coral), transparent 70%);
+      bottom: -20%;
+      right: -5%;
+      animation: drift-2 30s ease-in-out infinite alternate;
+    }
+
+    .lrw-orb--gold {
+      width: 400px;
+      height: 400px;
+      background: radial-gradient(circle, var(--lrw-gold), transparent 70%);
+      top: 50%;
+      left: 60%;
+      transform: translate(-50%, -50%);
+      animation: drift-3 20s ease-in-out infinite alternate;
+    }
+
+    @keyframes drift-1 {
+      0%   { transform: translate(0, 0) scale(1); }
+      50%  { transform: translate(80px, 60px) scale(1.15); }
+      100% { transform: translate(-40px, 100px) scale(0.9); }
+    }
+
+    @keyframes drift-2 {
+      0%   { transform: translate(0, 0) scale(1); }
+      50%  { transform: translate(-70px, -50px) scale(1.1); }
+      100% { transform: translate(50px, -80px) scale(0.95); }
+    }
+
+    @keyframes drift-3 {
+      0%   { transform: translate(-50%, -50%) scale(1); }
+      50%  { transform: translate(-40%, -60%) scale(1.2); }
+      100% { transform: translate(-55%, -45%) scale(0.85); }
+    }
+
+    /* ─── Grid underlay ─── */
+    .lrw-grid {
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(53, 169, 159, 0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(53, 169, 159, 0.04) 1px, transparent 1px);
+      background-size: 60px 60px;
+      mask-image: radial-gradient(ellipse 70% 60% at 50% 50%, black 20%, transparent 70%);
+      -webkit-mask-image: radial-gradient(ellipse 70% 60% at 50% 50%, black 20%, transparent 70%);
+    }
+
+    /* ─── Film grain ─── */
+    .lrw-noise {
+      position: absolute;
+      inset: -50%;
+      width: 200%;
+      height: 200%;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.06'/%3E%3C/svg%3E");
+      background-size: 256px 256px;
+      opacity: 0.5;
+      pointer-events: none;
+      animation: grain 8s steps(10) infinite;
+    }
+
+    @keyframes grain {
+      0%, 100% { transform: translate(0, 0); }
+      10% { transform: translate(-5%, -10%); }
+      20% { transform: translate(-15%, 5%); }
+      30% { transform: translate(7%, -15%); }
+      40% { transform: translate(-5%, 15%); }
+      50% { transform: translate(-15%, 10%); }
+      60% { transform: translate(15%, 0%); }
+      70% { transform: translate(0%, 10%); }
+      80% { transform: translate(3%, 15%); }
+      90% { transform: translate(-10%, 10%); }
+    }
+
+    /* ─── Content ─── */
     .lrw-splash__inner {
       position: relative;
       z-index: 2;
       padding: 2rem;
+      text-align: center;
     }
 
-    /* ASCII art */
+    /* ─── ASCII art ─── */
     .lrw-ascii {
-      font-family: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
-      font-size: clamp(0.35rem, 1.2vw, 0.85rem);
-      line-height: 1.2;
-      color: #edcc97;
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 300;
+      font-size: clamp(0.32rem, 1.1vw, 0.78rem);
+      line-height: 1.15;
+      color: var(--lrw-cream);
       white-space: pre;
-      margin-bottom: 2rem;
-      text-shadow: 0 0 30px rgba(53, 169, 159, 0.3);
+      margin-bottom: 3rem;
       user-select: none;
+      text-shadow:
+        0 0 40px rgba(53, 169, 159, 0.25),
+        0 0 80px rgba(53, 169, 159, 0.1);
+      animation: ascii-enter 1.8s cubic-bezier(0.16, 1, 0.3, 1) both,
+                 ascii-glow 6s ease-in-out 2s infinite alternate;
     }
 
-    /* Tagline */
+    @keyframes ascii-enter {
+      0% {
+        opacity: 0;
+        transform: translateY(20px) scale(0.97);
+        filter: blur(8px);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+        filter: blur(0);
+      }
+    }
+
+    @keyframes ascii-glow {
+      0% {
+        text-shadow:
+          0 0 40px rgba(53, 169, 159, 0.25),
+          0 0 80px rgba(53, 169, 159, 0.1);
+      }
+      100% {
+        text-shadow:
+          0 0 60px rgba(53, 169, 159, 0.4),
+          0 0 120px rgba(53, 169, 159, 0.15),
+          0 0 200px rgba(200, 90, 58, 0.08);
+      }
+    }
+
+    /* ─── Tagline ─── */
     .lrw-tagline {
-      font-family: 'Inter', sans-serif;
-      font-size: clamp(0.9rem, 2vw, 1.4rem);
-      letter-spacing: 0.4em;
-      color: #edcc97;
-      margin-bottom: 1rem;
-      font-weight: 300;
+      font-family: 'Syne', sans-serif;
+      font-weight: 400;
+      font-size: clamp(0.85rem, 1.8vw, 1.3rem);
+      letter-spacing: 0.5em;
+      color: var(--lrw-cream);
+      margin-bottom: 1.2rem;
+      opacity: 0;
+      animation: fade-up 1.2s cubic-bezier(0.16, 1, 0.3, 1) 0.6s both;
     }
 
-    /* Subtitle */
+    /* ─── Subtitle ─── */
     .lrw-subtitle {
-      font-family: 'Inter', sans-serif;
-      font-size: clamp(0.8rem, 1.5vw, 1.1rem);
-      color: rgba(237, 204, 151, 0.75);
-      font-style: italic;
-      margin-bottom: 2.5rem;
+      font-family: 'Cormorant Garamond', serif;
       font-weight: 300;
+      font-style: italic;
+      font-size: clamp(0.95rem, 1.8vw, 1.35rem);
+      color: rgba(237, 204, 151, 0.55);
+      margin-bottom: 3rem;
+      max-width: 36ch;
+      margin-left: auto;
+      margin-right: auto;
+      line-height: 1.6;
+      opacity: 0;
+      animation: fade-up 1.2s cubic-bezier(0.16, 1, 0.3, 1) 0.9s both;
     }
 
-    /* Status */
+    /* ─── Status ─── */
     .lrw-status {
       font-family: 'JetBrains Mono', monospace;
-      font-size: 0.8rem;
-      color: rgba(237, 204, 151, 0.5);
-      letter-spacing: 0.15em;
+      font-weight: 300;
+      font-size: 0.7rem;
+      color: rgba(53, 169, 159, 0.4);
+      letter-spacing: 0.25em;
       text-transform: uppercase;
+      opacity: 0;
+      animation: fade-up 1.2s cubic-bezier(0.16, 1, 0.3, 1) 1.2s both;
     }
 
-    /* Responsive: stack tighter on mobile */
+    .lrw-status::before {
+      content: "◈ ";
+      color: rgba(53, 169, 159, 0.3);
+    }
+
+    .lrw-status::after {
+      content: " ◈";
+      color: rgba(53, 169, 159, 0.3);
+    }
+
+    /* ─── Shared reveal ─── */
+    @keyframes fade-up {
+      0% {
+        opacity: 0;
+        transform: translateY(12px);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* ─── Divider ─── */
+    .lrw-divider {
+      width: 60px;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--lrw-teal), transparent);
+      margin: 0 auto 2.5rem;
+      opacity: 0;
+      animation: fade-up 1.2s cubic-bezier(0.16, 1, 0.3, 1) 0.75s both;
+    }
+
+    /* ─── Responsive ─── */
     @media (max-width: 600px) {
-      .lrw-ascii { font-size: 0.3rem; }
+      .lrw-ascii { font-size: 0.28rem; margin-bottom: 2rem; }
+      .lrw-orb { filter: blur(80px); opacity: 0.25; }
+      .lrw-orb--teal { width: 300px; height: 300px; }
+      .lrw-orb--coral { width: 250px; height: 250px; }
+      .lrw-orb--gold { width: 200px; height: 200px; }
+    }
+
+    /* ─── Reduce motion ─── */
+    @media (prefers-reduced-motion: reduce) {
+      .lrw-orb,
+      .lrw-ascii,
+      .lrw-tagline,
+      .lrw-subtitle,
+      .lrw-status,
+      .lrw-divider,
+      .lrw-noise {
+        animation: none !important;
+        opacity: 1;
+      }
     }
   </style>
 {% endblock %}
@@ -94,6 +283,18 @@
 {% block body %}
   {{ super() }}
   <div class="lrw-splash">
+    <!-- Drifting nebula -->
+    <div class="lrw-orb lrw-orb--teal"></div>
+    <div class="lrw-orb lrw-orb--coral"></div>
+    <div class="lrw-orb lrw-orb--gold"></div>
+
+    <!-- Computational grid -->
+    <div class="lrw-grid"></div>
+
+    <!-- Film grain -->
+    <div class="lrw-noise"></div>
+
+    <!-- Content -->
     <div class="lrw-splash__inner">
       <div class="lrw-ascii" aria-label="LATENT">
 ╔═══════════════════════════════════════════════════════════╗
@@ -108,6 +309,7 @@
 ╚═══════════════════════════════════════════════════════════╝</div>
 
       <div class="lrw-tagline">R E A S O N I N G &nbsp; ∿ &nbsp; W O R K S</div>
+      <div class="lrw-divider"></div>
       <div class="lrw-subtitle">Exploring the geometry of thought in artificial intelligence</div>
       <div class="lrw-status">Research in progress</div>
     </div>
