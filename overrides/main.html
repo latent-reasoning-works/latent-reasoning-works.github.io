@@ -1,0 +1,115 @@
+{% extends "base.html" %}
+
+{% block tabs %}{% endblock %}
+{% block content %}{% endblock %}
+{% block hero %}{% endblock %}
+
+{% block styles %}
+  {{ super() }}
+  <style>
+    /* Hide default MkDocs elements on landing page */
+    .md-main__inner { margin: 0; padding: 0; max-width: none; }
+    .md-sidebar { display: none; }
+    .md-content { max-width: none; margin: 0; padding: 0; }
+    .md-header { background: transparent; box-shadow: none; position: absolute; width: 100%; z-index: 10; }
+    .md-header[data-md-state="shadow"] { box-shadow: none; background: transparent; }
+    .md-footer { display: none; }
+
+    /* Splash hero */
+    .lrw-splash {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      background: linear-gradient(135deg in oklch, #35a99f, #c85a3a, #dfb624, #edcc97);
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Dark overlay for text readability */
+    .lrw-splash::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.45);
+      z-index: 1;
+    }
+
+    .lrw-splash__inner {
+      position: relative;
+      z-index: 2;
+      padding: 2rem;
+    }
+
+    /* ASCII art */
+    .lrw-ascii {
+      font-family: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
+      font-size: clamp(0.35rem, 1.2vw, 0.85rem);
+      line-height: 1.2;
+      color: #edcc97;
+      white-space: pre;
+      margin-bottom: 2rem;
+      text-shadow: 0 0 30px rgba(53, 169, 159, 0.3);
+      user-select: none;
+    }
+
+    /* Tagline */
+    .lrw-tagline {
+      font-family: 'Inter', sans-serif;
+      font-size: clamp(0.9rem, 2vw, 1.4rem);
+      letter-spacing: 0.4em;
+      color: #edcc97;
+      margin-bottom: 1rem;
+      font-weight: 300;
+    }
+
+    /* Subtitle */
+    .lrw-subtitle {
+      font-family: 'Inter', sans-serif;
+      font-size: clamp(0.8rem, 1.5vw, 1.1rem);
+      color: rgba(237, 204, 151, 0.75);
+      font-style: italic;
+      margin-bottom: 2.5rem;
+      font-weight: 300;
+    }
+
+    /* Status */
+    .lrw-status {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.8rem;
+      color: rgba(237, 204, 151, 0.5);
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+    }
+
+    /* Responsive: stack tighter on mobile */
+    @media (max-width: 600px) {
+      .lrw-ascii { font-size: 0.3rem; }
+    }
+  </style>
+{% endblock %}
+
+{% block body %}
+  {{ super() }}
+  <div class="lrw-splash">
+    <div class="lrw-splash__inner">
+      <div class="lrw-ascii" aria-label="LATENT">
+╔═══════════════════════════════════════════════════════════╗
+║                                                           ║
+║     ██╗      █████╗ ████████╗███████╗███╗   ██╗████████╗ ║
+║     ██║     ██╔══██╗╚══██╔══╝██╔════╝████╗  ██║╚══██╔══╝ ║
+║     ██║     ███████║   ██║   █████╗  ██╔██╗ ██║   ██║    ║
+║     ██║     ██╔══██║   ██║   ██╔══╝  ██║╚██╗██║   ██║    ║
+║     ███████╗██║  ██║   ██║   ███████╗██║ ╚████║   ██║    ║
+║     ╚══════╝╚═╝  ╚═╝   ╚═╝   ╚══════╝╚═╝  ╚═══╝   ╚═╝    ║
+║                                                           ║
+╚═══════════════════════════════════════════════════════════╝</div>
+
+      <div class="lrw-tagline">R E A S O N I N G &nbsp; ∿ &nbsp; W O R K S</div>
+      <div class="lrw-subtitle">Exploring the geometry of thought in artificial intelligence</div>
+      <div class="lrw-status">Research in progress</div>
+    </div>
+  </div>
+{% endblock %}
