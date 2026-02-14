@@ -1,8 +1,10 @@
 {% extends "base.html" %}
 
+{% block header %}{% endblock %}
 {% block tabs %}{% endblock %}
 {% block content %}{% endblock %}
 {% block hero %}{% endblock %}
+{% block footer %}{% endblock %}
 
 {% block styles %}
   {{ super() }}
@@ -280,8 +282,7 @@
   </style>
 {% endblock %}
 
-{% block body %}
-  {{ super() }}
+{% block container %}
   <div class="lrw-splash">
     <!-- Drifting nebula -->
     <div class="lrw-orb lrw-orb--teal"></div>
