@@ -229,6 +229,7 @@
       text-transform: uppercase;
       opacity: 0;
       animation: fade-up 1.2s cubic-bezier(0.16, 1, 0.3, 1) 1.2s both;
+      margin-bottom: 2.5rem;
     }
 
     .lrw-status::before {
@@ -239,6 +240,42 @@
     .lrw-status::after {
       content: " ◈";
       color: rgba(53, 169, 159, 0.3);
+    }
+
+    /* ─── Project links ─── */
+    .lrw-projects {
+      opacity: 0;
+      animation: fade-up 1.2s cubic-bezier(0.16, 1, 0.3, 1) 1.5s both;
+    }
+
+    .lrw-project-link {
+      display: inline-block;
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 400;
+      font-size: 0.8rem;
+      letter-spacing: 0.15em;
+      color: var(--lrw-cream);
+      text-decoration: none;
+      padding: 0.6rem 1.8rem;
+      border: 1px solid rgba(53, 169, 159, 0.3);
+      border-radius: 2px;
+      transition: all 0.3s ease;
+    }
+
+    .lrw-project-link:hover {
+      color: var(--lrw-teal);
+      border-color: var(--lrw-teal);
+      box-shadow: 0 0 20px rgba(53, 169, 159, 0.15);
+    }
+
+    .lrw-project-link__arrow {
+      display: inline-block;
+      margin-left: 0.5rem;
+      transition: transform 0.3s ease;
+    }
+
+    .lrw-project-link:hover .lrw-project-link__arrow {
+      transform: translateX(4px);
     }
 
     /* ─── Shared reveal ─── */
@@ -319,6 +356,12 @@
       <div class="lrw-divider"></div>
       <div class="lrw-subtitle">Exploring the geometry of thought in artificial intelligence</div>
       <div class="lrw-status">Research in progress</div>
+
+      <div class="lrw-projects">
+        <a class="lrw-project-link" href="https://latent-reasoning-works.github.io/manylatents/">
+          manylatents<span class="lrw-project-link__arrow">→</span>
+        </a>
+      </div>
     </div>
   </div>
 {% endblock %}
