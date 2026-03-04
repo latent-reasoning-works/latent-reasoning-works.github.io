@@ -1,7 +1,7 @@
 site_name: Latent Reasoning Works
 site_description: Exploring the geometry of thought in artificial intelligence
 site_author: Latent Reasoning Works
-site_url: https://latent-reasoning-works.github.io
+site_url: https://latentreasoning.works
 
 theme:
   name: material
