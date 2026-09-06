@@ -270,6 +270,7 @@
       transform: translateY(14px);
       animation: lrw-rise 1.1s cubic-bezier(0.16, 1, 0.3, 1) 1.0s forwards;
     }
+    .lrw-wordmark span + span { margin-left: 0.9em; }
 
     .lrw-hero .lrw-scale {
       opacity: 0;
@@ -577,6 +578,19 @@
       .lrw-tick--tl, .lrw-tick--bl { left: 16px; }
       .lrw-tick--tr, .lrw-tick--br { right: 16px; }
       .lrw-hero { padding: 3rem 1.25rem 4rem; }
+      /* the wordmark as a ladder: one word per rung, each stepping right */
+      .lrw-wordmark {
+        display: inline-block;
+        text-align: left;
+        padding-left: 0;
+        font-size: 1.15rem;
+        letter-spacing: 0.3em;
+        line-height: 1.5;
+      }
+      .lrw-wordmark span { display: block; }
+      .lrw-wordmark span + span { margin-left: 0; }
+      .lrw-wordmark span:nth-child(2) { padding-left: 1.6em; }
+      .lrw-wordmark span:nth-child(3) { padding-left: 3.2em; }
       .lrw-tagline { white-space: normal; text-wrap: balance; }
       .lrw-section { padding: 3.5rem 1.25rem 2.5rem; }
       .lrw-panel { padding: 1.7rem 1.4rem 1.5rem; }
@@ -624,7 +638,7 @@
           <img class="lrw-mark" src="assets/lrw-mark.png" alt="" width="446" height="446">
         </div>
 
-        <h1 class="lrw-wordmark">Latent&nbsp;&nbsp;Reasoning&nbsp;&nbsp;Works</h1>
+        <h1 class="lrw-wordmark"><span>Latent</span><span>Reasoning</span><span>Works</span></h1>
 
         <div class="lrw-scale" aria-hidden="true"><span class="lrw-scale__node"></span></div>
 
