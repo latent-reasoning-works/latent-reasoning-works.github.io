@@ -1,5 +1,5 @@
 site_name: Latent Reasoning Works
-site_description: Exploring the geometry of thought in artificial intelligence
+site_description: Measure the shape of a thought. Get the abstraction back.
 site_author: Latent Reasoning Works
 site_url: https://latentreasoning.works
 
@@ -27,3 +27,63 @@ markdown_extensions:
   - pymdownx.tabbed:
       alternate_style: true
   - tables
+
+# Everything the landing page says lives here. The template in overrides/main.html
+# renders it; to change copy, a status, or a link, edit this block and push.
+extra:
+  lrw:
+    tagline:
+      - Measure the shape of a thought.
+      - Get the abstraction back.
+    thesis: >-
+      Thoughts have structure. Whether they form in a brain or in a model, they take
+      a shape set by what is doing the thinking: its inductive biases, how sparse its
+      wiring is, what it was built to prefer. That shape can be measured. Latent
+      Reasoning Works builds the tools to measure it, to find the abstractions a
+      reasoner forms, and to nail them down as things that can be named, compared,
+      and built on.
+    status: Research in progress
+    github: https://github.com/latent-reasoning-works
+    email: cesar.valdez@mila.quebec
+
+    # status is "open" or "opening". An open tool shows its links; an opening one
+    # shows a pencilled frame and no links. Flip the word when a repo goes public.
+    tools:
+      - name: manylatents
+        tagline: one geometry, learned through many latents
+        blurb: >-
+          A latent has a shape, and a dozen methods will each show you a different
+          one. Which structure belongs to what was embedded, and which to the method
+          that embedded it? manylatents runs the methods and measures the geometry of
+          every result with one shared suite, so the structures can be compared at all.
+        status: open
+        docs: https://latentreasoning.works/manylatents/
+        repo: https://github.com/latent-reasoning-works/manylatents
+        pypi: https://pypi.org/project/manylatents/
+        extension:
+          name: manylatents-omics
+          docs: https://latentreasoning.works/manylatents-omics/
+          for: genetics and genomics
+
+      - name: manyagents
+        tagline: coordinate, dispatch, aggregate
+        blurb: >-
+          A model's thought forms somewhere you cannot see from its output. manyagents
+          talks to the models, one adapter per provider, and captures the trace and the
+          hidden states while the thought is forming, so its structure can be measured
+          the way a dataset's can.
+        status: opening
+        repo: https://github.com/latent-reasoning-works/manyagents
+
+      - name: manyruns
+        tagline: point it at your data, get the shape back
+        blurb: >-
+          Point it at your data. It reads what is there, runs the loop, and writes every
+          step down, so an abstraction found once can be found again. That is what
+          nailing one down means.
+        status: opening
+        repo: https://github.com/latent-reasoning-works/manyruns
+
+    # Papers and write-ups, once there are some. The section stays hidden while this
+    # list is empty. Each entry: title, meta (venue and year), href.
+    work: []

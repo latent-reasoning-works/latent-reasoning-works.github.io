@@ -21,23 +21,34 @@
   {{ super() }}
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@1,300&family=Syne:wght@400&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,300;1,400&family=Syne:wght@400&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
   <style>
     :root {
       --lrw-paper:     #f3e9d0;
       --lrw-paper-2:   #ecdfbe;
       --lrw-ink:       #2b1f15;
       --lrw-ink-soft:  #6b5640;
+      --lrw-pencil:    #8a7559;
       --lrw-coral:     #c85a3a;
       --lrw-coral-2:   #a8472b;
       --lrw-gold:      #dfb624;
       --lrw-teal:      #35a99f;
       --lrw-teal-deep: #1f7368;
       --lrw-cream:     #edcc97;
+
+      --lrw-cut: 16px;
+      --lrw-chamfer: polygon(
+        var(--lrw-cut) 0, 100% 0,
+        100% calc(100% - var(--lrw-cut)), calc(100% - var(--lrw-cut)) 100%,
+        0 100%, 0 var(--lrw-cut)
+      );
+      --lrw-grid:
+        linear-gradient(rgba(43, 31, 21, 0.045) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(43, 31, 21, 0.045) 1px, transparent 1px);
     }
 
-    /* Reset MkDocs chrome */
-    .md-main__inner { margin: 0; padding: 0; max-width: none; }
+    /* ─── Reset MkDocs chrome ─── */
+    .md-main__inner { margin: 0; padding: 0; max-width: none; display: block; }
     .md-sidebar { display: none; }
     .md-content { max-width: none; margin: 0; padding: 0; }
     .md-header { display: none !important; }
@@ -45,26 +56,14 @@
     .md-tabs { display: none; }
     .md-main { padding: 0; }
     .md-grid { max-width: none; margin: 0; }
+    html { scroll-behavior: smooth; }
+    body, .md-container, .md-main { background: var(--lrw-paper); }
 
-    /* ─── Paper ─── */
-    .lrw-splash {
+    /* ─── Paper grain under the whole page ─── */
+    .lrw-grain {
       position: fixed;
       inset: 0;
-      display: grid;
-      place-items: center;
-      overflow: hidden;
-      z-index: 5;
-      color: var(--lrw-ink);
-      background-color: var(--lrw-paper);
-      background-image:
-        radial-gradient(ellipse 60% 70% at 12% 8%,  rgba(223, 182, 36, 0.10), transparent 60%),
-        radial-gradient(ellipse 60% 70% at 88% 92%, rgba(200, 90, 58, 0.07),  transparent 60%);
-    }
-
-    /* ─── Static paper grain (one decode, no animation) ─── */
-    .lrw-grain {
-      position: absolute;
-      inset: 0;
+      z-index: 0;
       pointer-events: none;
       opacity: 0.55;
       mix-blend-mode: multiply;
@@ -72,7 +71,147 @@
       background-size: 220px 220px;
     }
 
-    /* ─── Faint gold curves echoing the logo ─── */
+    /* ─── Viewfinder corners, framing the viewport ─── */
+    .lrw-tick {
+      position: fixed;
+      z-index: 3;
+      width: 22px;
+      height: 22px;
+      pointer-events: none;
+      opacity: 0;
+      animation: lrw-fade 0.9s ease-out forwards;
+    }
+    .lrw-tick::after {
+      content: "";
+      position: absolute;
+      width: 3px;
+      height: 3px;
+      background: var(--lrw-coral);
+    }
+    .lrw-tick--tl { top: 24px; left: 24px;
+      border-top: 1.5px solid var(--lrw-coral); border-left: 1.5px solid var(--lrw-coral);
+      animation-delay: 0.15s; }
+    .lrw-tick--tl::after { top: 5px; left: 5px; }
+    .lrw-tick--tr { top: 24px; right: 24px;
+      border-top: 1.5px solid var(--lrw-coral); border-right: 1.5px solid var(--lrw-coral);
+      animation-delay: 0.22s; }
+    .lrw-tick--tr::after { top: 5px; right: 5px; }
+    .lrw-tick--bl { bottom: 24px; left: 24px;
+      border-bottom: 1.5px solid var(--lrw-coral); border-left: 1.5px solid var(--lrw-coral);
+      animation-delay: 0.29s; }
+    .lrw-tick--bl::after { bottom: 5px; left: 5px; }
+    .lrw-tick--br { bottom: 24px; right: 24px;
+      border-bottom: 1.5px solid var(--lrw-coral); border-right: 1.5px solid var(--lrw-coral);
+      animation-delay: 0.36s; }
+    .lrw-tick--br::after { bottom: 5px; right: 5px; }
+
+    /* ─── Page ─── */
+    .lrw-page {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      color: var(--lrw-ink);
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      -webkit-font-smoothing: antialiased;
+    }
+    .lrw-page a {
+      color: inherit;
+      text-decoration: underline;
+      text-decoration-color: var(--lrw-coral);
+      text-decoration-thickness: 1px;
+      text-underline-offset: 0.22em;
+      transition: color 0.3s ease, text-decoration-color 0.3s ease;
+    }
+    .lrw-page a:hover { color: var(--lrw-teal-deep); text-decoration-color: var(--lrw-teal); }
+    .lrw-page a:focus-visible { outline: 1.5px solid var(--lrw-teal); outline-offset: 4px; }
+
+    /* ─── Indicator lights ─── */
+    .lrw-light {
+      display: inline-block;
+      width: 7px;
+      height: 7px;
+      flex: none;
+      background: var(--lrw-teal);
+      box-shadow: 0 0 6px 1px rgba(53, 169, 159, 0.55);
+      animation: lrw-breathe 3.2s ease-in-out infinite;
+    }
+    .lrw-light--off {
+      background: transparent;
+      border: 1px solid var(--lrw-gold);
+      box-shadow: 0 0 4px 0 rgba(223, 182, 36, 0.35);
+      animation: none;
+    }
+
+    /* ─── Scale rule: hairline, ticks, one node ─── */
+    .lrw-scale {
+      position: relative;
+      width: clamp(180px, 26vw, 260px);
+      height: 11px;
+      margin: 1.4rem auto 1.4rem;
+    }
+    .lrw-scale::before {
+      content: "";
+      position: absolute;
+      left: 0; right: 0; top: 5px;
+      height: 1px;
+      background: var(--lrw-ink-soft);
+      opacity: 0.5;
+    }
+    .lrw-scale::after {
+      content: "";
+      position: absolute;
+      left: 0; right: 0; top: 2px;
+      height: 7px;
+      opacity: 0.45;
+      background: repeating-linear-gradient(90deg, var(--lrw-ink-soft) 0 1px, transparent 1px 20px);
+      -webkit-mask: linear-gradient(90deg, #000, #000);
+    }
+    .lrw-scale__node {
+      position: absolute;
+      left: 50%; top: 2px;
+      width: 7px;
+      height: 7px;
+      margin-left: -3.5px;
+      transform: rotate(45deg);
+      background: var(--lrw-paper);
+      border: 1px solid var(--lrw-coral);
+      box-shadow: 0 0 6px 0 rgba(200, 90, 58, 0.45);
+      z-index: 1;
+    }
+    .lrw-scale__node::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: var(--lrw-paper);
+    }
+
+    /* ─── Hero ─── */
+    .lrw-hero {
+      position: relative;
+      min-height: 100vh;
+      min-height: 100svh;
+      display: grid;
+      place-items: center;
+      overflow: hidden;
+      padding: 3rem 1.5rem 4rem;
+      background-image:
+        radial-gradient(ellipse 60% 70% at 12% 8%,  rgba(223, 182, 36, 0.10), transparent 60%),
+        radial-gradient(ellipse 60% 55% at 88% 62%, rgba(200, 90, 58, 0.07),  transparent 65%);
+    }
+    /* Blueprint grid on the hero paper, fading out toward the edges */
+    .lrw-hero::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      background-image: var(--lrw-grid);
+      background-size: 48px 48px;
+      -webkit-mask-image: radial-gradient(ellipse 70% 70% at 50% 50%, #000 30%, transparent 100%);
+      mask-image: radial-gradient(ellipse 70% 70% at 50% 50%, #000 30%, transparent 100%);
+    }
+
+    /* Faint gold curves echoing the logo */
     .lrw-flourish {
       position: absolute;
       inset: 0;
@@ -95,286 +234,467 @@
     .lrw-flourish path:nth-child(2) { opacity: 0.13; animation-delay: 0.45s; }
     .lrw-flourish path:nth-child(3) { opacity: 0.10; animation-delay: 0.7s;  }
 
-    /* ─── Printer's corner marks ─── */
-    .lrw-tick {
-      position: absolute;
-      width: 14px;
-      height: 14px;
-      pointer-events: none;
-      opacity: 0;
-      animation: lrw-fade 0.9s ease-out forwards;
-    }
-    .lrw-tick--tl { top: 26px; left: 26px;
-      border-top: 1px solid var(--lrw-coral); border-left: 1px solid var(--lrw-coral);
-      animation-delay: 0.15s; }
-    .lrw-tick--tr { top: 26px; right: 26px;
-      border-top: 1px solid var(--lrw-coral); border-right: 1px solid var(--lrw-coral);
-      animation-delay: 0.22s; }
-    .lrw-tick--bl { bottom: 26px; left: 26px;
-      border-bottom: 1px solid var(--lrw-coral); border-left: 1px solid var(--lrw-coral);
-      animation-delay: 0.29s; }
-    .lrw-tick--br { bottom: 26px; right: 26px;
-      border-bottom: 1px solid var(--lrw-coral); border-right: 1px solid var(--lrw-coral);
-      animation-delay: 0.36s; }
-
-    /* ─── Centerpiece ─── */
     .lrw-stage {
       position: relative;
       z-index: 2;
-      padding: 2.5rem 2rem;
-      max-width: min(640px, 92vw);
+      max-width: min(780px, 94vw);
       text-align: center;
     }
 
-    /* ─── Logo plate ─── */
+    /* The mark */
+    .lrw-mark-wrap {
+      position: relative;
+      width: clamp(160px, 20vw, 230px);
+      margin: 0 auto 1.8rem;
+    }
     .lrw-mark {
       display: block;
-      width: clamp(220px, 30vw, 320px);
+      width: 100%;
       height: auto;
-      margin: 0 auto 2.2rem;
       opacity: 0;
       transform: scale(0.96);
       filter: blur(6px);
       animation: lrw-bloom 1.6s cubic-bezier(0.16, 1, 0.3, 1) 0.55s forwards;
     }
 
-    /* ─── Wordmark ─── */
     .lrw-wordmark {
       font-family: 'Syne', sans-serif;
       font-weight: 400;
-      font-size: clamp(1.1rem, 2.6vw, 1.85rem);
+      font-size: clamp(1.05rem, 2.4vw, 1.7rem);
       letter-spacing: 0.42em;
       color: var(--lrw-teal-deep);
       margin: 0;
-      padding-left: 0.42em; /* compensate trailing letter-spacing for true centering */
+      padding-left: 0.42em;
       text-transform: uppercase;
       opacity: 0;
       transform: translateY(14px);
       animation: lrw-rise 1.1s cubic-bezier(0.16, 1, 0.3, 1) 1.0s forwards;
     }
 
-    /* ─── Hairline rule with ornament ─── */
-    .lrw-rule {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0.9rem;
-      width: clamp(160px, 28vw, 240px);
-      margin: 1.6rem auto 1.5rem;
-    }
-    .lrw-rule__line {
-      flex: 1;
-      height: 1px;
-      background: var(--lrw-teal-deep);
-      opacity: 0.55;
-      transform: scaleX(0);
-      animation: lrw-expand 1.0s cubic-bezier(0.65, 0, 0.35, 1) 1.2s forwards;
-    }
-    .lrw-rule__line--l { transform-origin: right; }
-    .lrw-rule__line--r { transform-origin: left;  }
-    .lrw-rule__node {
-      font-size: 0.8rem;
-      color: var(--lrw-coral);
+    .lrw-hero .lrw-scale {
       opacity: 0;
-      animation: lrw-fade 0.7s ease-out 1.4s forwards;
+      animation: lrw-fade 0.9s ease-out 1.25s forwards;
     }
 
-    /* ─── Subtitle ─── */
-    .lrw-subtitle {
-      font-family: 'Cormorant Garamond', serif;
-      font-weight: 300;
+    .lrw-tagline {
       font-style: italic;
-      font-size: clamp(1.05rem, 2vw, 1.45rem);
-      line-height: 1.55;
+      font-weight: 300;
+      font-size: clamp(1.05rem, 1.7vw, 1.28rem);
+      line-height: 1.4;
+      letter-spacing: 0.01em;
+      white-space: nowrap;
       color: var(--lrw-ink);
-      max-width: 32ch;
-      margin: 0 auto 1.9rem;
+      margin: 0 auto 1.7rem;
       opacity: 0;
       transform: translateY(12px);
       animation: lrw-rise 1.0s cubic-bezier(0.16, 1, 0.3, 1) 1.3s forwards;
     }
+    .lrw-tagline span { display: inline; }
 
-    /* ─── Status ─── */
-    .lrw-status {
-      font-family: 'JetBrains Mono', monospace;
+    .lrw-thesis {
       font-weight: 400;
+      font-size: clamp(1.08rem, 1.55vw, 1.25rem);
+      line-height: 1.6;
+      max-width: 56ch;
+      margin: 0 auto 1.9rem;
+      text-align: left;
+      text-wrap: pretty;
+      opacity: 0;
+      transform: translateY(12px);
+      animation: lrw-rise 1.0s cubic-bezier(0.16, 1, 0.3, 1) 1.5s forwards;
+    }
+
+    /* HUD readout */
+    .lrw-readout {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.8em;
+      font-family: 'JetBrains Mono', monospace;
       font-size: 0.66rem;
-      letter-spacing: 0.32em;
+      letter-spacing: 0.3em;
       text-transform: uppercase;
       color: var(--lrw-ink-soft);
-      margin: 0 0 2.4rem;
+      margin: 0;
+      padding: 0.55em 1.1em 0.55em 0.9em;
+      border: 1px solid rgba(107, 86, 64, 0.35);
+      clip-path: polygon(8px 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%, 0 8px);
       opacity: 0;
-      animation: lrw-fade 0.9s ease-out 1.5s forwards;
+      animation: lrw-fade 0.9s ease-out 1.75s forwards;
     }
-    .lrw-status::before { content: "◈"; color: var(--lrw-coral); margin-right: 0.7em; }
-    .lrw-status::after  { content: "◈"; color: var(--lrw-coral); margin-left:  0.7em; }
 
-    /* ─── Project links ─── */
-    .lrw-projects {
+    /* ─── Sections ─── */
+    .lrw-section {
+      max-width: 1080px;
+      margin: 0 auto;
+      padding: 4.5rem 1.5rem 3.5rem;
+    }
+    .lrw-h {
+      font-style: italic;
+      font-weight: 300;
+      font-size: clamp(1.7rem, 3vw, 2.3rem);
+      line-height: 1.2;
+      text-align: center;
+      margin: 0;
+      color: var(--lrw-ink);
+    }
+    .lrw-lede {
+      font-size: clamp(1.02rem, 1.4vw, 1.15rem);
+      line-height: 1.55;
+      text-align: center;
+      color: var(--lrw-ink-soft);
+      max-width: 52ch;
+      margin: 0 auto 2.6rem;
+      text-wrap: pretty;
+    }
+
+    /* ─── The codebases: chamfered panels ─── */
+    .lrw-panels {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 1.6rem 1.4rem;
+      align-items: stretch;
+    }
+    .lrw-panel {
+      position: relative;
+      isolation: isolate;
+      padding: 2rem 1.8rem 2rem;
+      --frame: var(--lrw-coral);
+      --fill: #eee3c9;
+    }
+    /* border layer */
+    .lrw-panel::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: -2;
+      background: var(--frame);
+      clip-path: var(--lrw-chamfer);
+      transition: background 0.35s ease;
+    }
+    /* fill layer with the HUD grid */
+    .lrw-panel::after {
+      content: "";
+      position: absolute;
+      inset: 1px;
+      z-index: -1;
+      background-color: var(--fill);
+      background-image: var(--lrw-grid);
+      background-size: 24px 24px;
+      clip-path: var(--lrw-chamfer);
+    }
+    .lrw-panel:hover, .lrw-panel:focus-within { --frame: var(--lrw-teal-deep); }
+
+    /* accent bar on the top edge and the light in the corner */
+    .lrw-panel__bar {
+      position: absolute;
+      top: 0;
+      left: calc(var(--lrw-cut) + 10px);
+      width: 46px;
+      height: 3px;
+      background: var(--frame);
+      transition: background 0.35s ease;
+    }
+    .lrw-panel:hover .lrw-panel__bar, .lrw-panel:focus-within .lrw-panel__bar { width: 92px; }
+    .lrw-panel__bar { transition: background 0.35s ease, width 0.5s cubic-bezier(0.16, 1, 0.3, 1); }
+
+    /* diagonal hatch along the bottom edge, the menu-edge stripe */
+    .lrw-panel__hatch {
+      position: absolute;
+      left: 1px;
+      right: calc(var(--lrw-cut) + 2px);
+      bottom: 1px;
+      height: 6px;
+      opacity: 0.3;
+      background: repeating-linear-gradient(-45deg, var(--frame) 0 2px, transparent 2px 8px);
+      transition: background 0.35s ease;
+    }
+
+    .lrw-panel--opening {
+      --frame: rgba(138, 117, 89, 0.75);
+      --fill: #e9dfc7;
+    }
+    .lrw-panel--opening:hover, .lrw-panel--opening:focus-within { --frame: var(--lrw-ink-soft); }
+
+    .lrw-panel__name {
       display: flex;
-      gap: 1.1rem;
+      align-items: center;
+      gap: 0.8rem;
+      font-family: 'Syne', sans-serif;
+      font-weight: 400;
+      font-size: 1.05rem;
+      letter-spacing: 0.16em;
+      color: var(--lrw-ink);
+      margin: 0 0 0.35rem;
+    }
+    /* leader line from the name to its light */
+    .lrw-panel__lead {
+      flex: 1;
+      height: 1px;
+      background: var(--frame);
+      opacity: 0.45;
+      transition: background 0.35s ease;
+    }
+    .lrw-panel__name a { text-decoration-color: transparent; }
+    .lrw-panel__name a:hover { text-decoration-color: var(--lrw-teal); }
+    .lrw-panel--opening .lrw-panel__name { color: var(--lrw-ink-soft); }
+
+    .lrw-panel__tagline {
+      font-style: italic;
+      font-weight: 400;
+      font-size: 1.12rem;
+      line-height: 1.35;
+      color: var(--lrw-teal-deep);
+      margin: 0 0 1.1rem;
+    }
+    .lrw-panel--opening .lrw-panel__tagline { color: var(--lrw-pencil); }
+
+    .lrw-panel__blurb {
+      font-size: 1.08rem;
+      line-height: 1.55;
+      margin: 0 0 1.4rem;
+      text-wrap: pretty;
+    }
+
+    .lrw-panel__status {
+      margin: auto 0 0;
+      padding-top: 0.9rem;
+      border-top: 1px solid rgba(107, 86, 64, 0.25);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.7rem;
+      line-height: 1.9;
+      letter-spacing: 0.06em;
+      color: var(--lrw-ink-soft);
+    }
+    .lrw-panel__status b {
+      font-weight: 400;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--lrw-ink);
+    }
+    .lrw-panel--opening .lrw-panel__status b { color: var(--lrw-pencil); }
+    .lrw-panel__status a { text-decoration-color: rgba(200, 90, 58, 0.6); }
+    .lrw-panel { display: flex; flex-direction: column; }
+
+    /* ─── Examples of work (hidden while empty) ─── */
+    .lrw-worklist {
+      list-style: none;
+      margin: 2rem auto 0;
+      padding: 0;
+      max-width: 62ch;
+    }
+    .lrw-worklist li {
+      padding: 0.9rem 0;
+      border-top: 1px solid rgba(43, 31, 21, 0.14);
+      font-size: 1.1rem;
+      line-height: 1.45;
+    }
+    .lrw-worklist li:last-child { border-bottom: 1px solid rgba(43, 31, 21, 0.14); }
+    .lrw-worklist__meta { display: block; font-size: 0.95rem; color: var(--lrw-ink-soft); }
+
+    /* ─── Come build ─── */
+    .lrw-join { text-align: center; padding-bottom: 4.5rem; }
+    .lrw-join__text {
+      font-size: clamp(1.12rem, 1.6vw, 1.3rem);
+      line-height: 1.5;
+      max-width: 40ch;
+      margin: 0 auto 2.2rem;
+      text-wrap: pretty;
+    }
+    .lrw-actions {
+      display: flex;
+      gap: 1rem;
       justify-content: center;
       flex-wrap: wrap;
     }
-    .lrw-project {
+    .lrw-action {
       position: relative;
+      isolation: isolate;
       display: inline-flex;
       align-items: center;
-      gap: 0.85rem;
-      padding: 1rem 1.7rem 1rem 1.4rem;
+      gap: 0.9em;
+      padding: 0.95rem 1.6rem 0.95rem 1.3rem;
       font-family: 'JetBrains Mono', monospace;
-      font-weight: 400;
-      font-size: 0.78rem;
-      letter-spacing: 0.18em;
-      text-transform: lowercase;
+      font-size: 0.76rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
       color: var(--lrw-ink);
-      text-decoration: none;
-      isolation: isolate;
-      opacity: 0;
-      transform: translateY(10px);
-      animation: lrw-rise 1.0s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-      transition: color 0.35s ease;
+      --frame: var(--lrw-coral);
+      --lrw-cut: 11px;
     }
-    .lrw-project:nth-child(1) { animation-delay: 1.65s; }
-    .lrw-project:nth-child(2) { animation-delay: 1.78s; }
-
-    .lrw-project__frame {
+    .lrw-page .lrw-action { text-decoration: none; }
+    .lrw-action::before {
+      content: "";
       position: absolute;
       inset: 0;
-      width: 100%;
-      height: 100%;
+      z-index: -2;
+      background: var(--frame);
+      clip-path: var(--lrw-chamfer);
+      transition: background 0.35s ease;
+    }
+    .lrw-action::after {
+      content: "";
+      position: absolute;
+      inset: 1px;
       z-index: -1;
-      overflow: visible;
+      background: #eee3c9;
+      clip-path: var(--lrw-chamfer);
     }
-    .lrw-project__frame path {
-      fill: none;
-      stroke: var(--lrw-coral);
-      stroke-width: 1.4;
-      stroke-linecap: round;
-      stroke-linejoin: round;
-      vector-effect: non-scaling-stroke;
-      stroke-dasharray: 700;
-      stroke-dashoffset: 700;
-      transition: stroke 0.35s ease, stroke-width 0.35s ease;
-    }
-    .lrw-project__frame path:nth-child(1) {
-      animation: lrw-draw 1.4s cubic-bezier(0.65, 0, 0.35, 1) 1.9s forwards;
-    }
-    .lrw-project__frame path:nth-child(2) {
-      opacity: 0.55;
-      stroke-width: 1.1;
-      animation: lrw-draw 1.6s cubic-bezier(0.65, 0, 0.35, 1) 2.05s forwards;
-    }
-    .lrw-project:nth-child(2) .lrw-project__frame path:nth-child(1) { animation-delay: 2.02s; }
-    .lrw-project:nth-child(2) .lrw-project__frame path:nth-child(2) { animation-delay: 2.17s; }
+    .lrw-action:hover, .lrw-action:focus-visible { --frame: var(--lrw-teal-deep); color: var(--lrw-teal-deep); }
+    .lrw-action .lrw-light { width: 6px; height: 6px; }
 
-    .lrw-project__num {
-      font-size: 0.6rem;
-      color: var(--lrw-coral);
-      letter-spacing: 0.22em;
-      transition: color 0.35s ease;
+    /* ─── Footer ─── */
+    .lrw-foot {
+      display: flex;
+      justify-content: center;
+      gap: 2.2rem;
+      padding: 1.6rem 1.5rem 3.2rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.64rem;
+      letter-spacing: 0.24em;
+      text-transform: uppercase;
+      color: var(--lrw-ink-soft);
     }
-    .lrw-project__arrow {
-      display: inline-block;
-      color: var(--lrw-coral);
-      margin-left: 0.1rem;
-      transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), color 0.35s ease;
-    }
-
-    .lrw-project:hover { color: var(--lrw-coral-2); }
-    .lrw-project:hover .lrw-project__frame path { stroke: var(--lrw-teal-deep); }
-    .lrw-project:hover .lrw-project__num,
-    .lrw-project:hover .lrw-project__arrow { color: var(--lrw-teal-deep); }
-    .lrw-project:hover .lrw-project__arrow { transform: translateX(7px); }
 
     /* ─── Animations ─── */
-    @keyframes lrw-fade   { to { opacity: 1; } }
-    @keyframes lrw-rise   { to { opacity: 1; transform: translateY(0); } }
-    @keyframes lrw-bloom  { to { opacity: 1; transform: scale(1); filter: blur(0); } }
-    @keyframes lrw-expand { to { transform: scaleX(1); } }
-    @keyframes lrw-draw   { to { stroke-dashoffset: 0; } }
+    @keyframes lrw-fade    { to { opacity: 1; } }
+    @keyframes lrw-rise    { to { opacity: 1; transform: translateY(0); } }
+    @keyframes lrw-bloom   { to { opacity: 1; transform: scale(1); filter: blur(0); } }
+    @keyframes lrw-draw    { to { stroke-dashoffset: 0; } }
+    @keyframes lrw-breathe {
+      0%, 100% { opacity: 0.6; box-shadow: 0 0 4px 0 rgba(53, 169, 159, 0.45); }
+      50%      { opacity: 1;   box-shadow: 0 0 9px 2px rgba(53, 169, 159, 0.65); }
+    }
 
     /* ─── Responsive ─── */
+    @media (max-width: 940px) {
+      .lrw-tagline { white-space: normal; text-wrap: balance; }
+      .lrw-panels { grid-template-columns: 1fr; max-width: 560px; margin: 0 auto; }
+    }
     @media (max-width: 640px) {
-      .lrw-tick { width: 10px; height: 10px; }
-      .lrw-tick--tl, .lrw-tick--tr { top: 18px; }
-      .lrw-tick--bl, .lrw-tick--br { bottom: 18px; }
-      .lrw-tick--tl, .lrw-tick--bl { left: 18px; }
-      .lrw-tick--tr, .lrw-tick--br { right: 18px; }
-      .lrw-mark { margin-bottom: 1.5rem; }
-      .lrw-status { margin-bottom: 1.8rem; }
-      .lrw-projects { gap: 0.7rem; }
-      .lrw-project { padding: 0.85rem 1.3rem; }
+      .lrw-tick { width: 16px; height: 16px; }
+      .lrw-tick--tl, .lrw-tick--tr { top: 16px; }
+      .lrw-tick--bl, .lrw-tick--br { bottom: 16px; }
+      .lrw-tick--tl, .lrw-tick--bl { left: 16px; }
+      .lrw-tick--tr, .lrw-tick--br { right: 16px; }
+      .lrw-hero { padding: 3rem 1.25rem 4rem; }
+      .lrw-tagline { white-space: normal; text-wrap: balance; }
+      .lrw-section { padding: 3.5rem 1.25rem 2.5rem; }
+      .lrw-panel { padding: 1.7rem 1.4rem 1.5rem; }
+      .lrw-actions { gap: 0.8rem; }
+      .lrw-action { padding: 0.85rem 1.2rem 0.85rem 1.1rem; }
+      .lrw-foot { gap: 1.4rem; flex-wrap: wrap; }
     }
 
     /* ─── Reduce motion ─── */
     @media (prefers-reduced-motion: reduce) {
-      .lrw-mark, .lrw-wordmark, .lrw-rule__line, .lrw-rule__node,
-      .lrw-subtitle, .lrw-status, .lrw-project, .lrw-tick,
-      .lrw-flourish path, .lrw-project__frame path {
+      .lrw-mark, .lrw-wordmark, .lrw-hero .lrw-scale,
+      .lrw-tagline, .lrw-thesis, .lrw-readout, .lrw-tick, .lrw-flourish path {
         animation: none !important;
         opacity: 1 !important;
         transform: none !important;
         filter: none !important;
         stroke-dashoffset: 0 !important;
       }
+      .lrw-light { animation: none !important; }
+      html { scroll-behavior: auto; }
     }
   </style>
 {% endblock %}
 
 {% block container %}
-  <section class="lrw-splash" aria-label="Latent Reasoning Works">
-    <div class="lrw-grain" aria-hidden="true"></div>
+  {% set lrw = config.extra.lrw %}
 
-    <svg class="lrw-flourish" viewBox="0 0 1600 1000" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
-      <path d="M -60 220 C 220 80, 460 320, 760 260 S 1180 90, 1480 220 S 1720 360, 1880 290" />
-      <path d="M -60 800 C 260 880, 540 660, 840 760 S 1240 920, 1540 790 S 1760 660, 1880 720" />
-      <path d="M 80 540 C 280 500, 580 600, 920 500 S 1260 360, 1560 460" />
-    </svg>
+  <div class="lrw-grain" aria-hidden="true"></div>
+  <span class="lrw-tick lrw-tick--tl" aria-hidden="true"></span>
+  <span class="lrw-tick lrw-tick--tr" aria-hidden="true"></span>
+  <span class="lrw-tick lrw-tick--bl" aria-hidden="true"></span>
+  <span class="lrw-tick lrw-tick--br" aria-hidden="true"></span>
 
-    <span class="lrw-tick lrw-tick--tl" aria-hidden="true"></span>
-    <span class="lrw-tick lrw-tick--tr" aria-hidden="true"></span>
-    <span class="lrw-tick lrw-tick--bl" aria-hidden="true"></span>
-    <span class="lrw-tick lrw-tick--br" aria-hidden="true"></span>
+  <main class="lrw-page">
 
-    <div class="lrw-stage">
-      <img class="lrw-mark"
-           src="assets/lrw-mark.png"
-           alt="Latent Reasoning Works"
-           width="446" height="446">
+    <section class="lrw-hero" aria-label="Latent Reasoning Works">
+      <svg class="lrw-flourish" viewBox="0 0 1600 1000" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+        <path d="M -60 220 C 220 80, 460 320, 760 260 S 1180 90, 1480 220 S 1720 360, 1880 290" />
+        <path d="M -60 800 C 260 880, 540 660, 840 760 S 1240 920, 1540 790 S 1760 660, 1880 720" />
+        <path d="M 80 540 C 280 500, 580 600, 920 500 S 1260 360, 1560 460" />
+      </svg>
 
-      <h1 class="lrw-wordmark">Latent&nbsp;&nbsp;Reasoning&nbsp;&nbsp;Works</h1>
+      <div class="lrw-stage">
+        <div class="lrw-mark-wrap">
+          <img class="lrw-mark" src="assets/lrw-mark.png" alt="" width="446" height="446">
+        </div>
 
-      <div class="lrw-rule" aria-hidden="true">
-        <span class="lrw-rule__line lrw-rule__line--l"></span>
-        <span class="lrw-rule__node">◈</span>
-        <span class="lrw-rule__line lrw-rule__line--r"></span>
+        <h1 class="lrw-wordmark">Latent&nbsp;&nbsp;Reasoning&nbsp;&nbsp;Works</h1>
+
+        <div class="lrw-scale" aria-hidden="true"><span class="lrw-scale__node"></span></div>
+
+        <p class="lrw-tagline">{% for line in lrw.tagline %}<span>{{ line }}</span>{% if not loop.last %} {% endif %}{% endfor %}</p>
+
+        <p class="lrw-thesis">{{ lrw.thesis }}</p>
+
+        <p class="lrw-readout"><span class="lrw-light" aria-hidden="true"></span>{{ lrw.status }}</p>
       </div>
+    </section>
 
-      <p class="lrw-subtitle">Shaping the geometry of thought in artificial intelligence</p>
+    <section class="lrw-section lrw-tools" aria-labelledby="lrw-tools-h">
+      <h2 class="lrw-h" id="lrw-tools-h">The codebases</h2>
+      <div class="lrw-scale" aria-hidden="true"><span class="lrw-scale__node"></span></div>
+      <p class="lrw-lede">Released as they are ready. Each carries the flavor of a problem worked on here.</p>
 
-      <div class="lrw-status">Research in progress</div>
+      <div class="lrw-panels">
+        {% for t in lrw.tools %}
+        <article class="lrw-panel lrw-panel--{{ t.status }}">
+          <span class="lrw-panel__bar" aria-hidden="true"></span>
+          <span class="lrw-panel__hatch" aria-hidden="true"></span>
 
-      <nav class="lrw-projects" aria-label="Projects">
-        <a class="lrw-project" href="https://latentreasoning.works/manylatents/">
-          <svg class="lrw-project__frame" viewBox="0 0 200 50" preserveAspectRatio="none" aria-hidden="true">
-            <path d="M 5 6 Q 50 2 100 5 Q 150 8 195 5 Q 198 25 195 45 Q 150 48 100 45 Q 50 42 5 45 Q 2 25 5 6 Z" />
-            <path d="M 7 8 Q 52 4 102 7 Q 152 10 193 7 Q 196 26 193 43 Q 148 46 98 43 Q 48 40 7 43 Q 4 26 7 8 Z" />
-          </svg>
-          <span class="lrw-project__num">01</span>
-          <span class="lrw-project__label">manylatents</span>
-          <span class="lrw-project__arrow">→</span>
-        </a>
-        <a class="lrw-project" href="https://latentreasoning.works/manylatents-omics/">
-          <svg class="lrw-project__frame" viewBox="0 0 200 50" preserveAspectRatio="none" aria-hidden="true">
-            <path d="M 5 7 Q 48 3 98 6 Q 148 9 195 6 Q 198 25 195 44 Q 152 47 98 44 Q 48 41 5 44 Q 2 25 5 7 Z" />
-            <path d="M 7 9 Q 50 5 100 8 Q 150 11 193 8 Q 196 26 193 42 Q 150 45 100 42 Q 50 39 7 42 Q 4 26 7 9 Z" />
-          </svg>
-          <span class="lrw-project__num">02</span>
-          <span class="lrw-project__label">omics</span>
-          <span class="lrw-project__arrow">→</span>
-        </a>
+          <h3 class="lrw-panel__name">
+            <span>{% if t.status == 'open' and t.docs %}<a href="{{ t.docs }}">{{ t.name }}</a>{% else %}{{ t.name }}{% endif %}</span>
+            <span class="lrw-panel__lead" aria-hidden="true"></span>
+            <span class="lrw-light{% if t.status != 'open' %} lrw-light--off{% endif %}" aria-hidden="true"></span>
+          </h3>
+          <p class="lrw-panel__tagline">{{ t.tagline }}</p>
+          <p class="lrw-panel__blurb">{{ t.blurb }}</p>
+          <p class="lrw-panel__status">
+            {% if t.status == 'open' %}
+              <b>open</b><br>
+              <a href="{{ t.repo }}">source</a>{% if t.pypi %} / <a href="{{ t.pypi }}">pypi</a>{% endif %}{% if t.docs %} / <a href="{{ t.docs }}">docs</a>{% endif %}
+              {% if t.extension %}<br>extended by <a href="{{ t.extension.docs }}">{{ t.extension.name }}</a> for {{ t.extension.for }}{% endif %}
+            {% else %}
+              <b>opening</b><br>
+              not yet public / <a href="{{ lrw.github }}">github</a>
+            {% endif %}
+          </p>
+        </article>
+        {% endfor %}
+      </div>
+    </section>
+
+    {% if lrw.work %}
+    <section class="lrw-section lrw-work" aria-labelledby="lrw-work-h">
+      <h2 class="lrw-h" id="lrw-work-h">Examples of work</h2>
+      <div class="lrw-scale" aria-hidden="true"><span class="lrw-scale__node"></span></div>
+      <ul class="lrw-worklist">
+        {% for w in lrw.work %}
+        <li><a href="{{ w.href }}">{{ w.title }}</a><span class="lrw-worklist__meta">{{ w.meta }}</span></li>
+        {% endfor %}
+      </ul>
+    </section>
+    {% endif %}
+
+    <section class="lrw-section lrw-join" aria-labelledby="lrw-join-h">
+      <h2 class="lrw-h" id="lrw-join-h">Come build</h2>
+      <div class="lrw-scale" aria-hidden="true"><span class="lrw-scale__node"></span></div>
+      <p class="lrw-join__text">The tools are open; the questions are ours. Both have room.</p>
+      <nav class="lrw-actions" aria-label="Get in touch">
+        <a class="lrw-action" href="{{ lrw.github }}"><span class="lrw-light" aria-hidden="true"></span>See the code</a>
+        <a class="lrw-action" href="mailto:{{ lrw.email }}"><span class="lrw-light" aria-hidden="true"></span>Write to us</a>
       </nav>
-    </div>
-  </section>
+    </section>
+
+    <footer class="lrw-foot">
+      <span>Latent Reasoning Works</span>
+      <span>MIT licensed</span>
+    </footer>
+
+  </main>
 {% endblock %}
