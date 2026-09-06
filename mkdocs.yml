@@ -40,8 +40,8 @@ extra:
       a shape set by what is doing the thinking: its inductive biases, how sparse its
       wiring is, what it was built to prefer. That shape can be measured. Latent
       Reasoning Works builds the tools to measure it, to find the abstractions a
-      reasoner forms, and to nail them down as things that can be named, compared,
-      and built on.
+      reasoner forms, and to make those abstractions concrete enough to name,
+      compare, and build on.
     status: Research in progress
     github: https://github.com/latent-reasoning-works
     email: cesar.valdez@mila.quebec
@@ -55,7 +55,8 @@ extra:
           A latent has a shape, and a dozen methods will each show you a different
           one. Which structure belongs to what was embedded, and which to the method
           that embedded it? manylatents runs the methods and measures the geometry of
-          every result with one shared suite, so the structures can be compared at all.
+          every result with one shared suite, so the structures can be compared on
+          the same terms.
         status: open
         docs: https://latentreasoning.works/manylatents/
         repo: https://github.com/latent-reasoning-works/manylatents
@@ -78,9 +79,8 @@ extra:
       - name: manyruns
         tagline: point it at your data, get the shape back
         blurb: >-
-          Point it at your data. It reads what is there, runs the loop, and writes every
-          step down, so an abstraction found once can be found again. That is what
-          nailing one down means.
+          manyruns reads your data, runs the experiment loop, and records each step,
+          so you can retrace how a result was found and run the experiment again.
         status: opening
         repo: https://github.com/latent-reasoning-works/manyruns
 
