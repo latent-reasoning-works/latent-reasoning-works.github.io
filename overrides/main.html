@@ -662,7 +662,7 @@
           <span class="lrw-panel__hatch" aria-hidden="true"></span>
 
           <h3 class="lrw-panel__name">
-            <span>{% if t.status == 'open' and t.docs %}<a href="{{ t.docs }}">{{ t.name }}</a>{% else %}{{ t.name }}{% endif %}</span>
+            <span>{% if t.status == 'open' %}<a href="{{ t.docs or t.repo }}">{{ t.name }}</a>{% else %}{{ t.name }}{% endif %}</span>
             <span class="lrw-panel__lead" aria-hidden="true"></span>
             <span class="lrw-light{% if t.status != 'open' %} lrw-light--off{% endif %}" aria-hidden="true"></span>
           </h3>

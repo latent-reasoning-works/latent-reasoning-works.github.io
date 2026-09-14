@@ -73,7 +73,7 @@ extra:
           talks to the models, one adapter per provider, and captures the trace and the
           hidden states while the thought is forming, so its structure can be measured
           the way a dataset's can.
-        status: opening
+        status: open
         repo: https://github.com/latent-reasoning-works/manyagents
 
       - name: manyruns
