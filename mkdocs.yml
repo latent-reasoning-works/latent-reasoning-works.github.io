@@ -75,13 +75,14 @@ extra:
           the way a dataset's can.
         status: open
         repo: https://github.com/latent-reasoning-works/manyagents
+        pypi: https://pypi.org/project/manyagents/
 
       - name: manyruns
         tagline: point it at your data, get the shape back
         blurb: >-
           manyruns reads your data, runs the experiment loop, and records each step,
           so you can retrace how a result was found and run the experiment again.
-        status: opening
+        status: open
         repo: https://github.com/latent-reasoning-works/manyruns
 
     # Papers and write-ups, once there are some. The section stays hidden while this
