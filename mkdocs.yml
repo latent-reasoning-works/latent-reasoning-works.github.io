@@ -84,6 +84,7 @@ extra:
           so you can retrace how a result was found and run the experiment again.
         status: open
         repo: https://github.com/latent-reasoning-works/manyruns
+        pypi: https://pypi.org/project/manyruns/
 
     # Papers and write-ups, once there are some. The section stays hidden while this
     # list is empty. Each entry: title, meta (venue and year), href.
